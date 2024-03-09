@@ -1,5 +1,6 @@
 package model;
 
+
 /**
  * Represents the association between Users and Events.
  */
@@ -43,5 +44,3 @@ public class UserEvents {
                 '}';
     }
 }
-
-

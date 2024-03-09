@@ -5,6 +5,7 @@ package model;
  * This allows for extending User functionality specifically for guests.
  */
 public class Guest extends User {
+    // Guest-specific properties can be added here.
 
     // Constructors
     public Guest() {
@@ -21,4 +22,3 @@ public class Guest extends User {
         return "Guest{" + super.toString() + "}";
     }
 }
-

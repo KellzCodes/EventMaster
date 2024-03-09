@@ -1,28 +1,41 @@
 package model;
 
+/**
+ * Represents a user in the system.
+ */
 public class User {
-    private int userId;
+    // Primary key, unique identifier for each user.
+    private int userID;
+
+    // Username of the user, must be unique.
     private String username;
+
+    // Email of the user, must be unique.
     private String email;
 
-    // Default constructor
+    // Constructors
     public User() {
+        // Default constructor
     }
 
-    // Parameterized constructor
-    public User(int userId, String username, String email) {
-        this.userId = userId;
+    public User(String username, String email) {
+        this.username = username;
+        this.email = email;
+    }
+
+    public User(int userID, String username, String email) {
+        this.userID = userID;
         this.username = username;
         this.email = email;
     }
 
     // Getters and setters
-    public int getUserId() {
-        return userId;
+    public int getUserID() {
+        return userID;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUserID(int userID) {
+        this.userID = userID;
     }
 
     public String getUsername() {
@@ -41,14 +54,13 @@ public class User {
         this.email = email;
     }
 
-    // toString method for debugging
+    // Override toString() method for better readability when printing User objects.
     @Override
     public String toString() {
         return "User{" +
-                "userId=" + userId +
+                "userID=" + userID +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 '}';
     }
 }
-
