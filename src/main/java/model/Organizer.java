@@ -12,14 +12,14 @@ public class Organizer extends User {
     }
 
     public int getID(){
-        return super.getUserId();
+        return super.getUserID();
     }
 
     // Override toString() method for better readability when printing Organizer objects
     @Override
     public String toString() {
         return "Organizer{" +
-                "userID=" + getUserId() +
+                "userID=" + getUserID() +
                 ", username='" + getUsername() + '\'' +
                 ", email='" + getEmail() + '\'' +
                 '}';

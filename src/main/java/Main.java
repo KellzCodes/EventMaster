@@ -1,26 +1,31 @@
-import config.DatabaseConfig;
-import java.sql.Connection;
+import ui.*;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class Main {
 
     public static void main(String[] args) {
-        // Initialize database connection
-        Connection connection = DatabaseConfig.getConnection();
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Event Master");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(800, 600);
 
-        if (connection != null) {
-            System.out.println("Successfully connected to the database.");
-            // Perform database operations
-        } else {
-            System.out.println("Failed to connect to the database.");
-        }
+            JTabbedPane tabbedPane = new JTabbedPane();
 
-        // Close the connection when done
-        try {
-            if (connection != null && !connection.isClosed()) {
-                connection.close();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            // Add tabs
+            tabbedPane.addTab("Events", new EventPanel());
+            tabbedPane.addTab("Budgets", new BudgetPanel());
+            tabbedPane.addTab("Expenses", new ExpensePanel());
+            tabbedPane.addTab("Tasks", new TaskPanel());
+            tabbedPane.addTab("Users", new UserPanel());
+            tabbedPane.addTab("Organizers", new OrganizerPanel());
+            tabbedPane.addTab("Guests", new GuestPanel());
+            tabbedPane.addTab("User Events", new UserEventsPanel());
+
+            frame.add(tabbedPane, BorderLayout.CENTER);
+
+            frame.setVisible(true);
+        });
     }
 }
