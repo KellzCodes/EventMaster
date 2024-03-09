@@ -5,15 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d953d44b-5e6e-4b27-8e5f-5a89b8d0411f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/dao/BudgetDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/dao/EventDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/dao/ExpenseDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/dao/GuestDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/dao/GuestRsvpStatusDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/dao/OrganizerDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/dao/TaskDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/dao/UserDAO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/Budget.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/Budget.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/Event.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/Event.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/Expense.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/Expense.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/Guest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/Guest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/GuestRsvpStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/GuestRsvpStatus.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/Organizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/Organizer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/Task.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/Task.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,6 +67,11 @@
     "project.structure.side.proportion": "0.0",
     "settings.editor.selected.configurable": "reference.settings.project.maven.repository.indices",
     "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
+    ]
   }
 }]]></component>
   <component name="SharedIndexes">
@@ -84,7 +90,7 @@
       <option name="presentableId" value="Default" />
       <updated>1709917801169</updated>
       <workItem from="1709917802164" duration="1116000" />
-      <workItem from="1709918925031" duration="9469000" />
+      <workItem from="1709918925031" duration="11517000" />
     </task>
     <servers />
   </component>
