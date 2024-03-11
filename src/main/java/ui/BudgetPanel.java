@@ -1,9 +1,14 @@
 package ui;
 
+import dao.BudgetDAO;
+import model.Budget;
+
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class BudgetPanel extends JPanel {
     private JTable budgetsTable;
@@ -16,10 +21,11 @@ public class BudgetPanel extends JPanel {
     }
 
     private void initializeUI() {
-        setLayout(new BorderLayout()); // Use BorderLayout for panel layout
+        setLayout(new BorderLayout());
 
         // Initialize the table for budgets
-        budgetsTable = new JTable(); // Consider using a custom TableModel for budgets
+        budgetsTable = new JTable();
+        budgetsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane scrollPane = new JScrollPane(budgetsTable);
         add(scrollPane, BorderLayout.CENTER);
 
@@ -28,6 +34,8 @@ public class BudgetPanel extends JPanel {
         addButton = new JButton("Add Budget");
         updateButton = new JButton("Update Budget");
         deleteButton = new JButton("Delete Budget");
+
+        refreshBudgetsTable();
 
         // Add action listeners to buttons
         addButton.addActionListener(new ActionListener() {
@@ -53,5 +61,30 @@ public class BudgetPanel extends JPanel {
         buttonPanel.add(updateButton);
         buttonPanel.add(deleteButton);
         add(buttonPanel, BorderLayout.SOUTH);
+    }
+
+    private void refreshBudgetsTable() {
+
+        BudgetDAO budgetDAO = new BudgetDAO();
+        List<Budget> budgets = budgetDAO.getAllBudgets(); // Fetch updated list of budgets
+
+        // Define column names for the table
+        String[] columnNames = {"Budget ID", "Event ID", "Total Amount"};
+
+        // Create a new table model
+        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+
+        // Populate the table model with budget data
+        for (Budget budget : budgets) {
+            Object[] row = new Object[]{
+                    budget.getBudgetID(),
+                    budget.getEventID(),
+                    budget.getTotalAmount()
+            };
+            model.addRow(row);
+        }
+
+        // Set the model on the table
+        budgetsTable.setModel(model);
     }
 }
