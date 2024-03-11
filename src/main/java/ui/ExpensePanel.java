@@ -149,7 +149,28 @@ public class ExpensePanel extends JPanel {
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Delete expense logic
+                int selectedRow = expensesTable.getSelectedRow();
+                if (selectedRow >= 0) {
+                    int expenseId = (Integer) expensesTable.getModel().getValueAt(selectedRow, 0);
+
+                    // Prompt for confirmation
+                    int confirm = JOptionPane.showConfirmDialog(null,
+                            "Are you sure you want to delete this expense?", "Confirm Deletion",
+                            JOptionPane.YES_NO_OPTION);
+
+                    if (confirm == JOptionPane.YES_OPTION) {
+                        ExpenseDAO expenseDAO = new ExpenseDAO();
+                        boolean success = expenseDAO.deleteExpense(expenseId);
+                        if (success) {
+                            JOptionPane.showMessageDialog(null, "Expense deleted successfully.");
+                            refreshExpensesTable(); // Refresh table to reflect the deletion
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Error deleting expense.");
+                        }
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please select an expense to delete.");
+                }
             }
         });
 
