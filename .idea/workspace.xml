@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d953d44b-5e6e-4b27-8e5f-5a89b8d0411f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ui/BudgetPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ui/BudgetPanel.java" afterDir="false" />
-    </list>
+    <list default="true" id="d953d44b-5e6e-4b27-8e5f-5a89b8d0411f" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -83,7 +80,7 @@
       <updated>1709917801169</updated>
       <workItem from="1709917802164" duration="1116000" />
       <workItem from="1709918925031" duration="14298000" />
-      <workItem from="1710184393828" duration="4976000" />
+      <workItem from="1710184393828" duration="5336000" />
     </task>
     <servers />
   </component>
