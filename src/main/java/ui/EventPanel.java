@@ -37,6 +37,9 @@ public class EventPanel extends JPanel {
         updateButton = new JButton("Update Event");
         deleteButton = new JButton("Delete Event");
 
+        // show all events in database
+        refreshEventsTable();
+
         // Add action listeners to buttons
         addButton.addActionListener(new ActionListener() {
             @Override
