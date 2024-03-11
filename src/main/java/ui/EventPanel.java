@@ -28,6 +28,7 @@ public class EventPanel extends JPanel {
 
         // Initialize the table for events
         eventsTable = new JTable();
+        eventsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane scrollPane = new JScrollPane(eventsTable);
         add(scrollPane, BorderLayout.CENTER);
 
@@ -47,7 +48,7 @@ public class EventPanel extends JPanel {
                 JTextField eventNameField = new JTextField(20);
                 JTextField eventDateField = new JTextField(20);
                 JTextField eventLocationField = new JTextField(20);
-                JComboBox<Organizer> organizerComboBox = new JComboBox<>(); // Assuming Organizer is your model class
+                JComboBox<Organizer> organizerComboBox = new JComboBox<>();
 
                 // Populate organizerComboBox with Organizer instances
                 OrganizerDAO organizerDAO = new OrganizerDAO();
@@ -76,10 +77,10 @@ public class EventPanel extends JPanel {
                         Organizer selectedOrganizer = (Organizer) organizerComboBox.getSelectedItem();
                         int organizerId = selectedOrganizer.getID(); // Assuming Organizer model has getId()
 
-                        // Instantiate your Event object here including the organizerId
+                        // Instantiate Event object
                         model.Event event = new Event(eventName, organizerId, eventDate, eventLocation);
 
-                        // Use your EventDAO to save the new event, including organizerId
+                        // Use EventDAO to save the new event
                         EventDAO eventDAO = new EventDAO();
                         eventDAO.insertEvent(event);
 
@@ -95,7 +96,64 @@ public class EventPanel extends JPanel {
         updateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Update event logic
+                int selectedRow = eventsTable.getSelectedRow();
+                if (selectedRow >= 0) {
+
+                    int eventId = (Integer) eventsTable.getModel().getValueAt(selectedRow, 0);
+
+                    EventDAO eventDAO = new EventDAO();
+                    Event eventToUpdate = eventDAO.getEventById(eventId);
+                    OrganizerDAO organizerDAO = new OrganizerDAO();
+                    List<Organizer> organizers = organizerDAO.getAllOrganizers();
+
+                    if (eventToUpdate != null) {
+                        JTextField eventNameField = new JTextField(eventToUpdate.getEventName(), 20);
+                        JTextField eventDateField = new JTextField(eventToUpdate.getDate().toString(), 20);
+                        JTextField eventLocationField = new JTextField(eventToUpdate.getLocation(), 20);
+                        JComboBox<Organizer> organizerComboBox = new JComboBox<>();
+
+                        // Populate the JComboBox with organizers
+                        Organizer selectedOrganizer = null;
+                        for (Organizer organizer : organizers) {
+                            organizerComboBox.addItem(organizer);
+                            if (organizer.getID() == eventToUpdate.getOrganizerID()) {
+                                selectedOrganizer = organizer;
+                            }
+                        }
+                        organizerComboBox.setSelectedItem(selectedOrganizer);
+
+                        JPanel panel = new JPanel(new GridLayout(0, 1));
+                        panel.add(new JLabel("Event Name:"));
+                        panel.add(eventNameField);
+                        panel.add(new JLabel("Event Date (YYYY-MM-DD):"));
+                        panel.add(eventDateField);
+                        panel.add(new JLabel("Event Location:"));
+                        panel.add(eventLocationField);
+                        panel.add(new JLabel("Organizer:"));
+                        panel.add(organizerComboBox);
+
+                        int result = JOptionPane.showConfirmDialog(null, panel, "Update Event",
+                                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                        if (result == JOptionPane.OK_OPTION) {
+                            try {
+                                eventToUpdate.setEventName(eventNameField.getText());
+                                eventToUpdate.setDate(Date.valueOf(eventDateField.getText()));
+                                eventToUpdate.setLocation(eventLocationField.getText());
+                                Organizer updatedOrganizer = (Organizer) organizerComboBox.getSelectedItem();
+                                eventToUpdate.setOrganizerId(updatedOrganizer.getID());
+
+                                eventDAO.updateEvent(eventToUpdate);
+                                refreshEventsTable();
+                            } catch (Exception ex) {
+                                JOptionPane.showMessageDialog(null, "Error updating the event: " + ex.getMessage());
+                            }
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "No event selected or event not found.");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please select an event to update.");
+                }
             }
         });
         deleteButton.addActionListener(new ActionListener() {
@@ -112,14 +170,12 @@ public class EventPanel extends JPanel {
     }
 
     private void refreshEventsTable() {
-        // Assuming eventDAO is your EventDAO implementation instance
         EventDAO eventDAO = new EventDAO();
         List<Event> events = eventDAO.getAllEvents(); // Fetch updated list of events
 
         // Define column names for the table
         String[] columnNames = {"Event ID", "Event Name", "Event Date", "Event Location"};
 
-        // Create a new table model (you might be using a custom model in your application)
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
         // Populate the table model with event data
