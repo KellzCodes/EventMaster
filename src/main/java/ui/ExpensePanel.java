@@ -8,6 +8,9 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 public class ExpensePanel extends JPanel {
@@ -41,7 +44,48 @@ public class ExpensePanel extends JPanel {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Add expense logic
+                JTextField budgetIDField = new JTextField(20);
+                JTextField amountField = new JTextField(20);
+                JTextField descriptionField = new JTextField(20);
+                JTextField dateField = new JTextField(20); // Date format: YYYY-MM-DD
+
+                JPanel panel = new JPanel(new GridLayout(0, 1));
+                panel.add(new JLabel("Budget ID:"));
+                panel.add(budgetIDField);
+                panel.add(new JLabel("Amount:"));
+                panel.add(amountField);
+                panel.add(new JLabel("Description:"));
+                panel.add(descriptionField);
+                panel.add(new JLabel("Date (YYYY-MM-DD):"));
+                panel.add(dateField);
+
+                int result = JOptionPane.showConfirmDialog(null, panel,
+                        "Add New Expense", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                if (result == JOptionPane.OK_OPTION) {
+                    try {
+                        int budgetID = Integer.parseInt(budgetIDField.getText());
+                        double amount = Double.parseDouble(amountField.getText());
+                        String description = descriptionField.getText();
+                        LocalDate date = LocalDate.parse(dateField.getText());
+
+                        Expense newExpense = new Expense(budgetID, amount, description, Date.valueOf(date));
+
+                        ExpenseDAO expenseDAO = new ExpenseDAO();
+                        Expense insertedExpense = expenseDAO.insertExpense(newExpense);
+                        if (insertedExpense != null) {
+                            JOptionPane.showMessageDialog(null, "Expense added successfully.");
+                            refreshExpensesTable(); // Method to refresh the expenses table display
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Error adding expense.");
+                        }
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(null, "Please enter valid numbers for Budget ID and Amount.");
+                    } catch (DateTimeParseException ex) {
+                        JOptionPane.showMessageDialog(null, "Please enter the date in format YYYY-MM-DD.");
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(null, "Error adding the expense: " + ex.getMessage());
+                    }
+                }
             }
         });
         updateButton.addActionListener(new ActionListener() {
