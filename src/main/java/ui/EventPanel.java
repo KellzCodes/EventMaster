@@ -159,7 +159,33 @@ public class EventPanel extends JPanel {
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Delete event logic
+                int selectedRow = eventsTable.getSelectedRow();
+                if (selectedRow >= 0) {
+
+                    int eventId = (Integer) eventsTable.getModel().getValueAt(selectedRow, 0);
+
+                    // Prompt the user to confirm deletion
+                    int confirm = JOptionPane.showConfirmDialog(null,
+                            "Are you sure you want to delete this event?", "Confirm Deletion",
+                            JOptionPane.YES_NO_OPTION);
+
+                    if (confirm == JOptionPane.YES_OPTION) {
+                        try {
+                            EventDAO eventDAO = new EventDAO();
+                            boolean success = eventDAO.deleteEvent(eventId);
+                            if (success) {
+                                JOptionPane.showMessageDialog(null, "Event deleted successfully.");
+                                refreshEventsTable(); // Refresh table to reflect the deletion
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Error deleting event.");
+                            }
+                        } catch (Exception ex) {
+                            JOptionPane.showMessageDialog(null, "Error deleting event: " + ex.getMessage());
+                        }
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please select an event to delete.");
+                }
             }
         });
 
