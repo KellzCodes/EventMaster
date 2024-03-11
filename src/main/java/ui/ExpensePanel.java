@@ -76,7 +76,7 @@ public class ExpensePanel extends JPanel {
                             JOptionPane.showMessageDialog(null, "Expense added successfully.");
                             refreshExpensesTable(); // Method to refresh the expenses table display
                         } else {
-                            JOptionPane.showMessageDialog(null, "Error adding expense.");
+                            JOptionPane.showMessageDialog(null, "This Budget does not exist. Please enter valid Budget.");
                         }
                     } catch (NumberFormatException ex) {
                         JOptionPane.showMessageDialog(null, "Please enter valid numbers for Budget ID and Amount.");
