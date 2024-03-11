@@ -76,7 +76,49 @@ public class BudgetPanel extends JPanel {
         updateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Update budget logic
+                int selectedRow = budgetsTable.getSelectedRow();
+                if (selectedRow >= 0) {
+
+                    int budgetId = (Integer) budgetsTable.getModel().getValueAt(selectedRow, 0);
+
+                    BudgetDAO budgetDAO = new BudgetDAO();
+                    Budget budgetToUpdate = budgetDAO.getBudgetById(budgetId);
+                    if (budgetToUpdate != null) {
+                        JTextField eventIDField = new JTextField(String.valueOf(budgetToUpdate.getEventID()), 20);
+                        JTextField totalAmountField = new JTextField(String.valueOf(budgetToUpdate.getTotalAmount()), 20);
+
+                        JPanel panel = new JPanel(new GridLayout(0, 1));
+                        panel.add(new JLabel("Event ID:"));
+                        panel.add(eventIDField);
+                        panel.add(new JLabel("Total Amount:"));
+                        panel.add(totalAmountField);
+
+                        int result = JOptionPane.showConfirmDialog(null, panel,
+                                "Update Budget", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                        if (result == JOptionPane.OK_OPTION) {
+                            try {
+                                int eventID = Integer.parseInt(eventIDField.getText());
+                                double totalAmount = Double.parseDouble(totalAmountField.getText());
+
+                                budgetToUpdate.setEventID(eventID);
+                                budgetToUpdate.setTotalAmount(totalAmount);
+
+                                budgetDAO.updateBudget(budgetToUpdate);
+
+                                // Refresh the budgets table to show the updated budget
+                                refreshBudgetsTable();
+                            } catch (NumberFormatException ex) {
+                                JOptionPane.showMessageDialog(null, "Please enter valid numbers for event ID and total amount.");
+                            } catch (Exception ex) {
+                                JOptionPane.showMessageDialog(null, "Error updating the budget: " + ex.getMessage());
+                            }
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Budget not found.");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please select a budget to update.");
+                }
             }
         });
         deleteButton.addActionListener(new ActionListener() {
