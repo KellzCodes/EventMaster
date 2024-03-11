@@ -91,7 +91,59 @@ public class ExpensePanel extends JPanel {
         updateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Update expense logic
+                int selectedRow = expensesTable.getSelectedRow();
+                if (selectedRow >= 0) {
+
+                    int expenseId = (Integer) expensesTable.getModel().getValueAt(selectedRow, 0);
+
+                    ExpenseDAO expenseDAO = new ExpenseDAO();
+                    Expense expenseToUpdate = expenseDAO.getExpenseById(expenseId);
+                    if (expenseToUpdate != null) {
+                        JTextField budgetIDField = new JTextField(String.valueOf(expenseToUpdate.getBudgetID()), 20);
+                        JTextField amountField = new JTextField(String.valueOf(expenseToUpdate.getAmount()), 20);
+                        JTextField descriptionField = new JTextField(expenseToUpdate.getDescription(), 20);
+                        JTextField dateField = new JTextField(expenseToUpdate.getDate().toString(), 20); // Assuming getDate() returns a java.sql.Date or similar
+
+                        JPanel panel = new JPanel(new GridLayout(0, 1));
+                        panel.add(new JLabel("Budget ID:"));
+                        panel.add(budgetIDField);
+                        panel.add(new JLabel("Amount:"));
+                        panel.add(amountField);
+                        panel.add(new JLabel("Description:"));
+                        panel.add(descriptionField);
+                        panel.add(new JLabel("Date (YYYY-MM-DD):"));
+                        panel.add(dateField);
+
+                        int result = JOptionPane.showConfirmDialog(null, panel,
+                                "Update Expense", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                        if (result == JOptionPane.OK_OPTION) {
+                            try {
+                                expenseToUpdate.setBudgetID(Integer.parseInt(budgetIDField.getText()));
+                                expenseToUpdate.setAmount(Double.parseDouble(amountField.getText()));
+                                expenseToUpdate.setDescription(descriptionField.getText());
+                                expenseToUpdate.setDate(Date.valueOf(LocalDate.parse(dateField.getText())));
+
+                                boolean success = expenseDAO.updateExpense(expenseToUpdate);
+                                if (success) {
+                                    JOptionPane.showMessageDialog(null, "Expense updated successfully.");
+                                    refreshExpensesTable(); // Method to refresh the expenses table display
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Error updating expense.");
+                                }
+                            } catch (NumberFormatException ex) {
+                                JOptionPane.showMessageDialog(null, "Please enter valid numbers for Budget ID and Amount.");
+                            } catch (DateTimeParseException ex) {
+                                JOptionPane.showMessageDialog(null, "Please enter the date in format YYYY-MM-DD.");
+                            } catch (Exception ex) {
+                                JOptionPane.showMessageDialog(null, "Error updating the expense: " + ex.getMessage());
+                            }
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Expense not found.");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please select an expense to update.");
+                }
             }
         });
         deleteButton.addActionListener(new ActionListener() {
