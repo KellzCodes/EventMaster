@@ -124,7 +124,33 @@ public class BudgetPanel extends JPanel {
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Delete budget logic
+                int selectedRow = budgetsTable.getSelectedRow();
+                if (selectedRow >= 0) {
+
+                    int budgetId = (Integer) budgetsTable.getModel().getValueAt(selectedRow, 0);
+
+                    // Prompt the user to confirm deletion
+                    int confirm = JOptionPane.showConfirmDialog(null,
+                            "Are you sure you want to delete this budget?", "Confirm Deletion",
+                            JOptionPane.YES_NO_OPTION);
+
+                    if (confirm == JOptionPane.YES_OPTION) {
+                        BudgetDAO budgetDAO = new BudgetDAO();
+                        try {
+                            boolean success = budgetDAO.deleteBudget(budgetId);
+                            if (success) {
+                                JOptionPane.showMessageDialog(null, "Budget deleted successfully.");
+                                refreshBudgetsTable(); // Refresh the table to show the update
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Error deleting budget.");
+                            }
+                        } catch (Exception ex) {
+                            JOptionPane.showMessageDialog(null, "Error deleting budget: " + ex.getMessage());
+                        }
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please select a budget to delete.");
+                }
             }
         });
 
