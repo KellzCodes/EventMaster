@@ -41,7 +41,38 @@ public class UserPanel extends JPanel {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Add user logic
+                JTextField usernameField = new JTextField(20);
+                JTextField emailField = new JTextField(20);
+
+                JPanel panel = new JPanel(new GridLayout(0, 1));
+                panel.add(new JLabel("Username:"));
+                panel.add(usernameField);
+                panel.add(new JLabel("Email:"));
+                panel.add(emailField);
+
+                int result = JOptionPane.showConfirmDialog(null, panel,
+                        "Add New User", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                if (result == JOptionPane.OK_OPTION) {
+                    String username = usernameField.getText();
+                    String email = emailField.getText();
+
+                    UserDAO userDAO = new UserDAO();
+                    User newUser = new User();
+                    newUser.setUsername(username);
+                    newUser.setEmail(email);
+
+                    try {
+                        User insertedUser = userDAO.insertUser(newUser);
+                        if (insertedUser != null) { // A non-null User indicates success
+                            JOptionPane.showMessageDialog(null, "User added successfully.");
+                            refreshUsersTable(); // Method to refresh the users table display
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Error adding user.");
+                        }
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(null, "Error adding the user: " + ex.getMessage());
+                    }
+                }
             }
         });
         updateButton.addActionListener(new ActionListener() {
