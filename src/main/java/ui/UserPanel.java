@@ -1,9 +1,14 @@
 package ui;
 
+import dao.UserDAO;
+import model.User;
+
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class UserPanel extends JPanel {
     private JTable usersTable;
@@ -16,10 +21,11 @@ public class UserPanel extends JPanel {
     }
 
     private void initializeUI() {
-        setLayout(new BorderLayout()); // Use BorderLayout for panel layout
+        setLayout(new BorderLayout());
 
         // Initialize the table for users
         usersTable = new JTable();
+        usersTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane scrollPane = new JScrollPane(usersTable);
         add(scrollPane, BorderLayout.CENTER);
 
@@ -28,6 +34,8 @@ public class UserPanel extends JPanel {
         addButton = new JButton("Add User");
         updateButton = new JButton("Update User");
         deleteButton = new JButton("Delete User");
+
+        refreshUsersTable();
 
         // Add action listeners to buttons
         addButton.addActionListener(new ActionListener() {
@@ -53,5 +61,29 @@ public class UserPanel extends JPanel {
         buttonPanel.add(updateButton);
         buttonPanel.add(deleteButton);
         add(buttonPanel, BorderLayout.SOUTH);
+    }
+
+    private void refreshUsersTable() {
+        UserDAO userDAO = new UserDAO();
+        List<User> users = userDAO.getAllUsers(); // Fetch updated list of users
+
+        // Define column names for the table
+        String[] columnNames = {"UserID", "Username", "Email"};
+
+        // Create a new table model
+        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+
+        // Populate the table model with user data
+        for (User user : users) {
+            Object[] row = new Object[]{
+                    user.getUserID(),
+                    user.getUsername(),
+                    user.getEmail()
+            };
+            model.addRow(row);
+        }
+
+        // Set the model on the table
+        usersTable.setModel(model);
     }
 }
