@@ -1,7 +1,9 @@
 package ui;
 
 import dao.OrganizerDAO;
+import dao.UserDAO;
 import model.Organizer;
+import model.User;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -41,7 +43,30 @@ public class OrganizerPanel extends JPanel {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Add organizer logic
+                UserDAO userDAO = new UserDAO();
+                List<User> eligibleUsers = userDAO.getEligibleUsersForOrganizer();
+
+                JComboBox<User> usersComboBox = new JComboBox<>();
+                for (User user : eligibleUsers) {
+                    usersComboBox.addItem(user);
+                }
+
+                JPanel panel = new JPanel(new GridLayout(0, 1));
+                panel.add(new JLabel("Select User:"));
+                panel.add(usersComboBox);
+
+                int result = JOptionPane.showConfirmDialog(null, panel, "Add Organizer", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                if (result == JOptionPane.OK_OPTION) {
+                    User selectedUser = (User) usersComboBox.getSelectedItem();
+                    OrganizerDAO organizerDAO = new OrganizerDAO();
+                    boolean success = organizerDAO.addOrganizer(selectedUser.getUserID());
+                    if (success) {
+                        JOptionPane.showMessageDialog(null, "Organizer added successfully.");
+                        refreshOrganizersTable();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Failed to add organizer.");
+                    }
+                }
             }
         });
         updateButton.addActionListener(new ActionListener() {
