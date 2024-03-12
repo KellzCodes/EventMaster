@@ -148,7 +148,29 @@ public class TaskPanel extends JPanel {
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Delete task logic
+                int selectedRow = tasksTable.getSelectedRow();
+                if (selectedRow >= 0) {
+
+                    int taskId = (Integer) tasksTable.getModel().getValueAt(selectedRow, 0);
+
+                    // Prompt for confirmation
+                    int confirm = JOptionPane.showConfirmDialog(null,
+                            "Are you sure you want to delete this task?", "Confirm Deletion",
+                            JOptionPane.YES_NO_OPTION);
+
+                    if (confirm == JOptionPane.YES_OPTION) {
+                        TaskDAO taskDAO = new TaskDAO();
+                        boolean success = taskDAO.deleteTask(taskId);
+                        if (success) {
+                            JOptionPane.showMessageDialog(null, "Task deleted successfully.");
+                            refreshTasksTable(); // Refresh your table to reflect the deletion
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Error deleting task.");
+                        }
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please select a task to delete.");
+                }
             }
         });
 
