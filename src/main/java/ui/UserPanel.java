@@ -78,7 +78,46 @@ public class UserPanel extends JPanel {
         updateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Update user logic
+                int selectedRow = usersTable.getSelectedRow();
+                if (selectedRow >= 0) {
+
+                    int userId = (Integer) usersTable.getModel().getValueAt(selectedRow, 0);
+
+                    UserDAO userDAO = new UserDAO();
+                    User userToUpdate = userDAO.getUserById(userId);
+                    if (userToUpdate != null) {
+                        JTextField usernameField = new JTextField(userToUpdate.getUsername(), 20);
+                        JTextField emailField = new JTextField(userToUpdate.getEmail(), 20);
+
+                        JPanel panel = new JPanel(new GridLayout(0, 1));
+                        panel.add(new JLabel("Username:"));
+                        panel.add(usernameField);
+                        panel.add(new JLabel("Email:"));
+                        panel.add(emailField);
+
+                        int result = JOptionPane.showConfirmDialog(null, panel,
+                                "Update User", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                        if (result == JOptionPane.OK_OPTION) {
+                            String username = usernameField.getText();
+                            String email = emailField.getText();
+
+                            userToUpdate.setUsername(username);
+                            userToUpdate.setEmail(email);
+
+                            boolean success = userDAO.updateUser(userToUpdate);
+                            if (success) {
+                                JOptionPane.showMessageDialog(null, "User updated successfully.");
+                                refreshUsersTable(); // Method to refresh the users table display
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Error updating user.");
+                            }
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "User not found.");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please select a user to update.");
+                }
             }
         });
         deleteButton.addActionListener(new ActionListener() {
