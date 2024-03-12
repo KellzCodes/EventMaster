@@ -91,7 +91,58 @@ public class TaskPanel extends JPanel {
         updateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Update task logic
+                int selectedRow = tasksTable.getSelectedRow();
+                if (selectedRow >= 0) {
+
+                    int taskId = (Integer) tasksTable.getModel().getValueAt(selectedRow, 0);
+
+                    TaskDAO taskDAO = new TaskDAO();
+                    Task taskToUpdate = taskDAO.getTaskById(taskId);
+                    if (taskToUpdate != null) {
+                        JTextField eventIDField = new JTextField(String.valueOf(taskToUpdate.getEventID()), 20);
+                        JTextField descriptionField = new JTextField(taskToUpdate.getDescription(), 20);
+                        JComboBox<Task.Status> statusComboBox = new JComboBox<>(Task.Status.values());
+                        statusComboBox.setSelectedItem(taskToUpdate.getStatus());
+                        JTextField coordinatorField = new JTextField(String.valueOf(taskToUpdate.getCoordinator()), 20);
+
+                        JPanel panel = new JPanel(new GridLayout(0, 1));
+                        panel.add(new JLabel("Event ID:"));
+                        panel.add(eventIDField);
+                        panel.add(new JLabel("Description:"));
+                        panel.add(descriptionField);
+                        panel.add(new JLabel("Status:"));
+                        panel.add(statusComboBox);
+                        panel.add(new JLabel("Coordinator ID:"));
+                        panel.add(coordinatorField);
+
+                        int result = JOptionPane.showConfirmDialog(null, panel,
+                                "Update Task", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                        if (result == JOptionPane.OK_OPTION) {
+                            try {
+                                taskToUpdate.setEventID(Integer.parseInt(eventIDField.getText()));
+                                taskToUpdate.setDescription(descriptionField.getText());
+                                taskToUpdate.setStatus((Task.Status) statusComboBox.getSelectedItem());
+                                taskToUpdate.setCoordinator(Integer.parseInt(coordinatorField.getText()));
+
+                                boolean success = taskDAO.updateTask(taskToUpdate);
+                                if (success) {
+                                    JOptionPane.showMessageDialog(null, "Task updated successfully.");
+                                    refreshTasksTable(); // Refresh the tasks table
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Error updating task.");
+                                }
+                            } catch (NumberFormatException ex) {
+                                JOptionPane.showMessageDialog(null, "Please enter valid numbers for Event ID and Coordinator ID.");
+                            } catch (Exception ex) {
+                                JOptionPane.showMessageDialog(null, "Error updating the task: " + ex.getMessage());
+                            }
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Task not found.");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please select a task to update.");
+                }
             }
         });
         deleteButton.addActionListener(new ActionListener() {
