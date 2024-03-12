@@ -1,9 +1,14 @@
 package ui;
 
+import dao.OrganizerDAO;
+import model.Organizer;
+
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class OrganizerPanel extends JPanel {
     private JTable organizersTable;
@@ -20,6 +25,7 @@ public class OrganizerPanel extends JPanel {
 
         // Initialize the table for organizers
         organizersTable = new JTable();
+        organizersTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane scrollPane = new JScrollPane(organizersTable);
         add(scrollPane, BorderLayout.CENTER);
 
@@ -28,6 +34,8 @@ public class OrganizerPanel extends JPanel {
         addButton = new JButton("Add Organizer");
         updateButton = new JButton("Update Organizer");
         deleteButton = new JButton("Delete Organizer");
+
+        refreshOrganizersTable();
 
         // Add action listeners to buttons
         addButton.addActionListener(new ActionListener() {
@@ -53,5 +61,29 @@ public class OrganizerPanel extends JPanel {
         buttonPanel.add(updateButton);
         buttonPanel.add(deleteButton);
         add(buttonPanel, BorderLayout.SOUTH);
+    }
+
+    private void refreshOrganizersTable() {
+        OrganizerDAO organizerDAO = new OrganizerDAO();
+        List<Organizer> organizers = organizerDAO.getAllOrganizers(); // Fetch updated list of organizers
+
+        // Define column names for the table
+        String[] columnNames = {"Organizer ID", "Username", "Email"};
+
+        // Create a new table model
+        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+
+        // Populate the table model with organizer data
+        for (Organizer organizer : organizers) {
+            Object[] row = new Object[]{
+                    organizer.getID(),
+                    organizer.getUsername(),
+                    organizer.getEmail()
+            };
+            model.addRow(row);
+        }
+
+        // Set the model on the table
+        organizersTable.setModel(model);
     }
 }
