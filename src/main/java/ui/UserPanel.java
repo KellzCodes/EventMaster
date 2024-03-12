@@ -123,7 +123,29 @@ public class UserPanel extends JPanel {
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Delete user logic
+                int selectedRow = usersTable.getSelectedRow();
+                if (selectedRow >= 0) {
+
+                    int userId = (Integer) usersTable.getModel().getValueAt(selectedRow, 0);
+
+                    // Prompt for confirmation
+                    int confirm = JOptionPane.showConfirmDialog(null,
+                            "Are you sure you want to delete this user?", "Confirm Deletion",
+                            JOptionPane.YES_NO_OPTION);
+
+                    if (confirm == JOptionPane.YES_OPTION) {
+                        UserDAO userDAO = new UserDAO();
+                        boolean success = userDAO.deleteUser(userId);
+                        if (success) {
+                            JOptionPane.showMessageDialog(null, "User deleted successfully.");
+                            refreshUsersTable();
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Error deleting user.");
+                        }
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please select a user to delete.");
+                }
             }
         });
 
