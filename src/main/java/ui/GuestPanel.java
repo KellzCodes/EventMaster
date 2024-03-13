@@ -96,7 +96,28 @@ public class GuestPanel extends JPanel {
 
         });
         deleteButton.addActionListener(e -> {
-            // Delete guest logic
+            GuestDAO guestDAO = new GuestDAO();
+            int selectedRow = guestsTable.getSelectedRow();
+            if (selectedRow >= 0) {
+
+                int guestUserID = Integer.parseInt(guestsTable.getValueAt(selectedRow, 0).toString());
+
+                // Confirm deletion
+                int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this guest?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+
+                if (confirm == JOptionPane.YES_OPTION) {
+
+                    boolean success = guestDAO.deleteGuest(guestUserID);
+                    if (success) {
+                        JOptionPane.showMessageDialog(null, "Guest deleted successfully.");
+                        refreshGuestsTable();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Failed to delete guest.");
+                    }
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Please select a guest to delete.");
+            }
         });
         updateRsvpButton.addActionListener(e -> {
             // Logic to update RSVP status
