@@ -1,6 +1,8 @@
 package ui;
 
 import config.DatabaseConfig;
+import dao.EventDAO;
+import dao.UserDAO;
 import model.User;
 import model.Event;
 
@@ -10,6 +12,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
+import java.util.List;
 
 public class UserEventsPanel extends JPanel {
     private JTable userEventsTable;
@@ -52,10 +55,11 @@ public class UserEventsPanel extends JPanel {
         controlsPanel.add(eventComboBoxPanel);
         controlsPanel.add(buttonPanel);
 
-        refreshUserEventsTable();
-
         // Add the controls panel to the bottom of the main panel
         add(controlsPanel, BorderLayout.SOUTH);
+
+        refreshUserEventsTable();
+        populateComboBoxes();
 
         // Add action listeners
         addButton.addActionListener(e -> {
@@ -90,6 +94,20 @@ public class UserEventsPanel extends JPanel {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void populateComboBoxes() {
+        UserDAO userDAO = new UserDAO();
+        EventDAO eventDAO = new EventDAO();
+        List<User> users = userDAO.getAllUsers();
+        for (User user : users) {
+            userComboBox.addItem(user);
+        }
+
+        List<Event> events = eventDAO.getAllEvents();
+        for (Event event : events) {
+            eventComboBox.addItem(event);
         }
     }
 }
