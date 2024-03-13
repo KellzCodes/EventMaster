@@ -1,12 +1,17 @@
 package ui;
 
+import dao.GuestDAO;
+import model.GuestRsvpStatus;
+
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class GuestPanel extends JPanel {
-    private JTable guestTable;
+    private JTable guestsTable;
     private JButton addButton;
     private JButton updateButton;
     private JButton deleteButton;
@@ -20,8 +25,9 @@ public class GuestPanel extends JPanel {
         setLayout(new BorderLayout());
 
         // Initialize the table for guests and their RSVP status
-        guestTable = new JTable();
-        JScrollPane scrollPane = new JScrollPane(guestTable);
+        guestsTable = new JTable();
+        JScrollPane scrollPane = new JScrollPane(guestsTable);
+        guestsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         add(scrollPane, BorderLayout.CENTER);
 
         // Initialize buttons and add them to a panel
@@ -30,6 +36,8 @@ public class GuestPanel extends JPanel {
         updateButton = new JButton("Update Guest");
         deleteButton = new JButton("Delete Guest");
         updateRsvpButton = new JButton("Update RSVP Status"); // Button to update RSVP status
+
+        refreshGuestsTable();
 
         // Action listeners for buttons
         addButton.addActionListener(e -> {
@@ -50,5 +58,31 @@ public class GuestPanel extends JPanel {
         buttonPanel.add(deleteButton);
         buttonPanel.add(updateRsvpButton);
         add(buttonPanel, BorderLayout.SOUTH);
+    }
+
+    private void refreshGuestsTable() {
+        GuestDAO guestDAO = new GuestDAO();
+        List<GuestRsvpStatus> guestsWithRsvp = guestDAO.getAllGuestRsvpStatus(); // Fetch combined guest and RSVP data
+
+        // Define column names for the table
+        String[] columnNames = {"User ID", "Username", "Email", "Event ID", "RSVP Status"};
+
+        // Create a new table model
+        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+
+        // Populate the table model
+        for (GuestRsvpStatus guest : guestsWithRsvp) {
+            Object[] row = new Object[]{
+                    guest.getUserID(),
+                    guest.getUsername(),
+                    guest.getEmail(),
+                    guest.getEventID(),
+                    guest.getRsvpStatus()
+            };
+            model.addRow(row);
+        }
+
+        // Set the model on the table
+        guestsTable.setModel(model);
     }
 }
