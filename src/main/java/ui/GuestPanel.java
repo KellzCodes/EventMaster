@@ -17,7 +17,6 @@ import java.util.List;
 public class GuestPanel extends JPanel {
     private JTable guestsTable;
     private JButton addButton;
-    private JButton updateButton;
     private JButton deleteButton;
     private JButton updateRsvpButton; // Button to update RSVP status
 
@@ -37,7 +36,6 @@ public class GuestPanel extends JPanel {
         // Initialize buttons and add them to a panel
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         addButton = new JButton("Add Guest");
-        updateButton = new JButton("Update Guest");
         deleteButton = new JButton("Delete Guest");
         updateRsvpButton = new JButton("Update RSVP Status"); // Button to update RSVP status
 
@@ -51,7 +49,7 @@ public class GuestPanel extends JPanel {
             GuestRsvpStatusDAO guestRsvpStatusDAO = new GuestRsvpStatusDAO();
 
             // Initialize JTextField for user input
-            JTextField userTextField = new JTextField(20); // Adjust size as needed
+            JTextField userTextField = new JTextField(20);
 
             // Fetch the list of events
             List<Event> events = eventDAO.getAllEvents();
@@ -97,9 +95,6 @@ public class GuestPanel extends JPanel {
             }
 
         });
-        updateButton.addActionListener(e -> {
-            // Update guest logic
-        });
         deleteButton.addActionListener(e -> {
             // Delete guest logic
         });
@@ -108,7 +103,6 @@ public class GuestPanel extends JPanel {
         });
 
         buttonPanel.add(addButton);
-        buttonPanel.add(updateButton);
         buttonPanel.add(deleteButton);
         buttonPanel.add(updateRsvpButton);
         add(buttonPanel, BorderLayout.SOUTH);
