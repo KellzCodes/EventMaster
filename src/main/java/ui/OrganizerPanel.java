@@ -15,7 +15,6 @@ import java.util.List;
 public class OrganizerPanel extends JPanel {
     private JTable organizersTable;
     private JButton addButton;
-    private JButton updateButton;
     private JButton deleteButton;
 
     public OrganizerPanel() {
@@ -34,7 +33,6 @@ public class OrganizerPanel extends JPanel {
         // Initialize buttons and add them to a panel
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         addButton = new JButton("Add Organizer");
-        updateButton = new JButton("Update Organizer");
         deleteButton = new JButton("Delete Organizer");
 
         refreshOrganizersTable();
@@ -77,7 +75,6 @@ public class OrganizerPanel extends JPanel {
         });
 
         buttonPanel.add(addButton);
-        buttonPanel.add(updateButton);
         buttonPanel.add(deleteButton);
         add(buttonPanel, BorderLayout.SOUTH);
     }
