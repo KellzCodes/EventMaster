@@ -3,6 +3,7 @@ package ui;
 import config.DatabaseConfig;
 import dao.EventDAO;
 import dao.UserDAO;
+import dao.UserEventsDAO;
 import model.User;
 import model.Event;
 
@@ -62,8 +63,25 @@ public class UserEventsPanel extends JPanel {
         populateComboBoxes();
 
         // Add action listeners
-        addButton.addActionListener(e -> {
-            // Logic to add user-event association
+        addButton.addActionListener(new ActionListener() {
+            UserEventsDAO userEventsDAO = new UserEventsDAO();
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                User selectedUser = (User) userComboBox.getSelectedItem();
+                Event selectedEvent = (Event) eventComboBox.getSelectedItem();
+                if (selectedUser == null || selectedEvent == null) {
+                    JOptionPane.showMessageDialog(null, "Please select both a user and an event.");
+                    return;
+                }
+
+                boolean success = userEventsDAO.addUserToEvent(selectedUser.getUserID(), selectedEvent.getEventId());
+                if (success) {
+                    JOptionPane.showMessageDialog(null, "Association added successfully.");
+                    refreshUserEventsTable();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Failed to add association.");
+                }
+            }
         });
         deleteButton.addActionListener(e -> {
             // Logic to remove selected association
