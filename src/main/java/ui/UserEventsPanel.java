@@ -83,8 +83,26 @@ public class UserEventsPanel extends JPanel {
                 }
             }
         });
-        deleteButton.addActionListener(e -> {
-            // Logic to remove selected association
+        deleteButton.addActionListener(new ActionListener() {
+            UserEventsDAO userEventsDAO = new UserEventsDAO();
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = userEventsTable.getSelectedRow();
+                if (selectedRow >= 0) {
+                    int userId = (Integer) userEventsTable.getValueAt(selectedRow, 0);
+                    int eventId = (Integer) userEventsTable.getValueAt(selectedRow, 2);
+
+                    boolean success = userEventsDAO.removeUserFromEvent(userId, eventId);
+                    if (success) {
+                        JOptionPane.showMessageDialog(null, "Association removed successfully.");
+                        refreshUserEventsTable();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Failed to remove association.");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please select an association to delete.");
+                }
+            }
         });
     }
 
