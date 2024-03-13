@@ -69,12 +69,6 @@ public class OrganizerPanel extends JPanel {
                 }
             }
         });
-        updateButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Update organizer logic
-            }
-        });
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
