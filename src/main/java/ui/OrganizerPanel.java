@@ -70,7 +70,28 @@ public class OrganizerPanel extends JPanel {
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Delete organizer logic
+                int selectedRow = organizersTable.getSelectedRow();
+                if (selectedRow >= 0) {
+                    int userId = (Integer) organizersTable.getModel().getValueAt(selectedRow, 0);
+
+                    // Prompt for confirmation
+                    int confirm = JOptionPane.showConfirmDialog(null,
+                            "Are you sure you want to delete this organizer?", "Confirm Deletion",
+                            JOptionPane.YES_NO_OPTION);
+
+                    if (confirm == JOptionPane.YES_OPTION) {
+                        OrganizerDAO organizerDAO = new OrganizerDAO();
+                        boolean success = organizerDAO.deleteOrganizer(userId);
+                        if (success) {
+                            JOptionPane.showMessageDialog(null, "Organizer deleted successfully.");
+                            refreshOrganizersTable();
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Error deleting organizer.");
+                        }
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please select an organizer to delete.");
+                }
             }
         });
 
