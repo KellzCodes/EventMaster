@@ -1,7 +1,11 @@
 package ui;
 
+import dao.EventDAO;
 import dao.GuestDAO;
+import dao.GuestRsvpStatusDAO;
+import dao.UserDAO;
 import model.GuestRsvpStatus;
+import model.Event;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -41,7 +45,57 @@ public class GuestPanel extends JPanel {
 
         // Action listeners for buttons
         addButton.addActionListener(e -> {
-            // Add guest logic
+            UserDAO userDAO = new UserDAO();
+            EventDAO eventDAO = new EventDAO();
+            GuestDAO guestDAO = new GuestDAO();
+            GuestRsvpStatusDAO guestRsvpStatusDAO = new GuestRsvpStatusDAO();
+
+            // Initialize JTextField for user input
+            JTextField userTextField = new JTextField(20); // Adjust size as needed
+
+            // Fetch the list of events
+            List<Event> events = eventDAO.getAllEvents();
+            JComboBox<Event> eventComboBox = new JComboBox<>(events.toArray(new Event[0]));
+
+            // RSVP Status selection
+            JComboBox<GuestRsvpStatus.RsvpStatus> rsvpStatusComboBox = new JComboBox<>(GuestRsvpStatus.RsvpStatus.values());
+
+            // Create panel to hold the components
+            JPanel panel = new JPanel(new GridLayout(0, 1));
+            panel.add(new JLabel("Enter User ID:"));
+            panel.add(userTextField);
+            panel.add(new JLabel("Select Event:"));
+            panel.add(eventComboBox);
+            panel.add(new JLabel("RSVP Status:"));
+            panel.add(rsvpStatusComboBox);
+
+            // Show dialog to get user input
+            int result = JOptionPane.showConfirmDialog(null, panel, "Add Guest with RSVP", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+            if (result == JOptionPane.OK_OPTION) {
+                String userIdInput = userTextField.getText();
+                Event selectedEvent = (Event) eventComboBox.getSelectedItem();
+                GuestRsvpStatus.RsvpStatus selectedRsvpStatus = (GuestRsvpStatus.RsvpStatus) rsvpStatusComboBox.getSelectedItem();
+
+                // Check for valid user input before proceeding
+                if (!userIdInput.trim().isEmpty()) {
+
+                    boolean successGuest = guestDAO.addGuest(Integer.parseInt(userIdInput));
+                    if (successGuest) {
+                        boolean successRsvp = guestRsvpStatusDAO.addRsvpStatus(Integer.parseInt(userIdInput), selectedEvent.getEventId(), selectedRsvpStatus);
+                        if (successRsvp) {
+                            JOptionPane.showMessageDialog(null, "Guest and RSVP status added successfully.");
+                            refreshGuestsTable(); // Refresh the guest list
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Failed to add RSVP status.");
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Failed to add guest.");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "User ID cannot be empty.");
+                }
+            }
+
         });
         updateButton.addActionListener(e -> {
             // Update guest logic
