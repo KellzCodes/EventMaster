@@ -120,7 +120,41 @@ public class GuestPanel extends JPanel {
             }
         });
         updateRsvpButton.addActionListener(e -> {
-            // Logic to update RSVP status
+            GuestRsvpStatusDAO guestRsvpStatusDAO = new GuestRsvpStatusDAO();
+            int selectedRow = guestsTable.getSelectedRow();
+            if (selectedRow >= 0) {
+
+                int guestUserID = Integer.parseInt(guestsTable.getValueAt(selectedRow, 0).toString());
+                int eventID = Integer.parseInt(guestsTable.getValueAt(selectedRow, 3).toString());
+
+                // Fetch current RSVP status
+                GuestRsvpStatus.RsvpStatus currentStatus = guestRsvpStatusDAO.getRsvpStatus(guestUserID, eventID);
+
+
+                // Setup a dialog for RSVP status selection
+                JComboBox<GuestRsvpStatus.RsvpStatus> rsvpStatusComboBox = new JComboBox<>(GuestRsvpStatus.RsvpStatus.values());
+                rsvpStatusComboBox.setSelectedItem(currentStatus);
+
+
+                JPanel panel = new JPanel(new GridLayout(0, 1));
+                panel.add(new JLabel("Select New RSVP Status:"));
+                panel.add(rsvpStatusComboBox);
+
+                int result = JOptionPane.showConfirmDialog(null, panel, "Update RSVP Status", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                if (result == JOptionPane.OK_OPTION) {
+                    GuestRsvpStatus.RsvpStatus newStatus = (GuestRsvpStatus.RsvpStatus) rsvpStatusComboBox.getSelectedItem();
+
+                    boolean success = guestRsvpStatusDAO.updateGuestRsvpStatus(guestUserID, eventID, newStatus);
+                    if (success) {
+                        JOptionPane.showMessageDialog(null, "RSVP status updated successfully.");
+                        refreshGuestsTable(); // Refresh the guest list to reflect the update
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Failed to update RSVP status.");
+                    }
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Please select a guest to update RSVP status.");
+            }
         });
 
         buttonPanel.add(addButton);
