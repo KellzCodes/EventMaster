@@ -1,12 +1,15 @@
 package ui;
 
+import config.DatabaseConfig;
 import model.User;
 import model.Event;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.*;
 
 public class UserEventsPanel extends JPanel {
     private JTable userEventsTable;
@@ -49,6 +52,8 @@ public class UserEventsPanel extends JPanel {
         controlsPanel.add(eventComboBoxPanel);
         controlsPanel.add(buttonPanel);
 
+        refreshUserEventsTable();
+
         // Add the controls panel to the bottom of the main panel
         add(controlsPanel, BorderLayout.SOUTH);
 
@@ -59,5 +64,32 @@ public class UserEventsPanel extends JPanel {
         deleteButton.addActionListener(e -> {
             // Logic to remove selected association
         });
+    }
+
+    public void refreshUserEventsTable() {
+        String[] columnNames = {"UserID", "Username", "EventID", "EventName", "Date"}; // Define column names
+        DefaultTableModel model = new DefaultTableModel(columnNames, 0); // Initialize model with column names
+        userEventsTable.setModel(model); // Set the model to the table
+
+        String query = "SELECT User.UserID, User.Username, Event.EventID, Event.EventName, Event.Date FROM User "
+                + "JOIN user_events ON User.UserID = user_events.UserID "
+                + "JOIN Event ON user_events.EventID = Event.EventID";
+
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            while (rs.next()) {
+                int userId = rs.getInt("UserID");
+                String username = rs.getString("Username");
+                int eventId = rs.getInt("EventID");
+                String eventName = rs.getString("EventName");
+                Date date = rs.getDate("Date");
+
+                model.addRow(new Object[]{userId, username, eventId, eventName, date}); // Add row to the model
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
