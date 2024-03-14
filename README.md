@@ -9,6 +9,9 @@ Event Master is a Java-based JDBC event management system designed to organize a
 - Robust database integration for persistent data management.
 - User role management including guests and organizers.
 
+![image](https://github.com/KellzCodes/EventMaster/assets/19383145/085420e1-c752-47cc-98e9-50f4f7cc12a0)
+
+
 ## Installation Instructions
 1. Ensure you have MySQL Workbench installed to create and insert the database information.
 2. Follow the provided SQL queries to set up the database structure and insert initial data.
