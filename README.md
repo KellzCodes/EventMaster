@@ -1,7 +1,13 @@
 # Event Master README
 
 ## Project Introduction
-Event Master is a Java JDBC event management application.
+Event Master is a Java-based JDBC event management system designed to organize and manage events effectively. This system facilitates user interaction through a Swing GUI, allowing for the management of events, users, organizers, and tasks.
+
+## Features
+- CRUD operations for events, users, organizers, tasks, and more.
+- Dynamic user interface built with Java Swing.
+- Robust database integration for persistent data management.
+- User role management including guests and organizers.
 
 ## Installation Instructions
 1. Ensure you have MySQL Workbench installed to create and insert the database information.
